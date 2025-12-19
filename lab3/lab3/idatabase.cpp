@@ -48,12 +48,25 @@ bool IDatabase::searchPatient(QString filter)
     return patientTabModel->select();
 }
 
+
+
 bool IDatabase::deleteCurrentPatient()
 {
+    // QModelIndex curIndex = thePatientSelection->currentIndex();
+    // patientTabModel->removeRow(curIndex.row());
+    // patientTabModel->submitAll();
+    // patientTabModel->select();
+    // 检查是否有选中的行
+    if (!thePatientSelection->hasSelection()) {
+        return false; // 没有选中行，直接返回
+    }
+
     QModelIndex curIndex = thePatientSelection->currentIndex();
-    patientTabModel->removeRow(curIndex.row());
-    patientTabModel->submitAll();
-    patientTabModel->select();
+    if (curIndex.isValid()) { // 确保索引有效
+        patientTabModel->removeRow(curIndex.row());
+        return patientTabModel->submitAll(); // 返回提交结果
+    }
+    return false;
 }
 
 bool IDatabase::submitPatientEdit()
